@@ -1,0 +1,29 @@
+name: Update Last Contribution Badge
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Fetch last contribution timestamp
+        run: |
+          curl -s "https://api.github.com/users/erikpersson0884/events/public" | grep -m 1 "created_at" > last-contribution.json
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add last-contribution.json
+          git commit -m "Update last contribution timestamp" || true
+          git push
