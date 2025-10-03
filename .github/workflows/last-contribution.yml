@@ -2,7 +2,10 @@ name: Update Last Contribution Badge
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour
+    - cron: '0 4 * * *'  # Runs at 04:00 UTC (06:00 in Sweden during summer, 07:00 in winter)
+    
+permissions:
+  contents: write
 
 jobs:
   update:
@@ -10,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
